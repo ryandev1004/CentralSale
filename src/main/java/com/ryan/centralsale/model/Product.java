@@ -42,5 +42,10 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<PriceHistory> priceHistory = new ArrayList<>();
 
+    private boolean isAvailable; // Indicates if the product is currently available
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }

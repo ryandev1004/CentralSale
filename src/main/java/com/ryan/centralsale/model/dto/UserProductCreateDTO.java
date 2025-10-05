@@ -2,12 +2,10 @@ package com.ryan.centralsale.model.dto;
 
 import lombok.Data;
 
-import java.util.List;
 import java.util.UUID;
 
 @Data
-public class UserDTO {
+public class UserProductCreateDTO {
     private UUID userId;
-    private String email;
-    private List<UserProductDTO> userProducts;
+    private String url;
 }
