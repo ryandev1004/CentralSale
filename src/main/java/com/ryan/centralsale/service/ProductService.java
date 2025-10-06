@@ -4,14 +4,19 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ryan.centralsale.mapper.ProductMapper;
 import com.ryan.centralsale.model.Product;
+import com.ryan.centralsale.model.UserProduct;
 import com.ryan.centralsale.model.dto.ProductCreateDTO;
+import com.ryan.centralsale.model.dto.ProductPatchDTO;
 import com.ryan.centralsale.repository.ProductRepository;
+import com.ryan.centralsale.util.Email;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -22,6 +27,8 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class ProductService {
 
+    private final Email email;
+    private final UserProductService userProductService;
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     private final ObjectMapper objectMapper; // used for parsing our JSON response
@@ -119,7 +126,54 @@ public class ProductService {
         return Optional.empty();
     }
 
-    public Product findEntityById(UUID productId) {
-        return productRepository.findById(productId).orElse(null);
+    public List<Product> findAllUncheckedProducts() {
+        return productRepository.findAllUncheckedProducts(LocalDateTime.now().minusHours(3));
+    }
+
+    public List<Product> findUnusedProducts() {
+        return productRepository.findUnusedProducts();
+    }
+
+    public void removeProduct(Product product) {
+        productRepository.delete(product);
+    }
+
+    public void updateProduct(String asin) {
+        Product productToUpdate = fetchProduct(asin);
+        if (productToUpdate == null) {
+            throw new RuntimeException("Product not found with ASIN: " + asin);
+        }
+        System.out.println("Before update - lastChecked: " + productToUpdate.getLastChecked());
+
+        double oldPrice = productToUpdate.getCurrentPrice();
+
+        ProductCreateDTO freshData = fetchProductData(asin);
+        ProductPatchDTO productUpdate = productMapper.toPatchDTO(freshData);
+
+
+        productMapper.updateEntityFromDto(productUpdate, productToUpdate);
+
+        double newPrice = productToUpdate.getCurrentPrice();
+        productToUpdate.setPriceDrop(oldPrice > newPrice);
+        productToUpdate.setLastChecked(LocalDateTime.now());
+        System.out.println("After setting - lastChecked: " + productToUpdate.getLastChecked());
+
+        if(productToUpdate.isPriceDrop()) {
+            double percentOff = ((oldPrice - newPrice) / oldPrice) * 100;
+            notifyUsers(productToUpdate, percentOff);
+        }
+
+        Product saved = productRepository.save(productToUpdate);
+        System.out.println("After save - lastChecked: " + saved.getLastChecked());
+    }
+
+    private void notifyUsers(Product product, double percent) {
+        List<UserProduct> userProducts = userProductService
+                .getActiveUserProductsByProduct(product);
+        for (UserProduct userProduct : userProducts) {
+            if (userProduct.isNotifyMe()) {
+                email.sendEmail(userProduct, percent);
+            }
+        }
     }
 }

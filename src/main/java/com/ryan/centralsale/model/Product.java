@@ -1,14 +1,10 @@
 package com.ryan.centralsale.model;
 
-import com.ryan.centralsale.model.util.PriceHistory;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Not the product for our Users to be tracking, but products will be saved and
@@ -19,9 +15,10 @@ import java.util.UUID;
 @Table(name = "products_table")
 public class Product {
 
+
     @Id
     @UuidGenerator
-    private UUID productId;
+    private String productId; // Unique identifier for the product in our system
 
     @Column(unique = true, nullable = false)
     private String asin; // Amazon Standard Identification Number
@@ -39,13 +36,13 @@ public class Product {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt; // Timestamp to show how the product has been tracked in our system
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<PriceHistory> priceHistory = new ArrayList<>();
+    private boolean priceDrop; // Indicates if there has been a price drop since the last check
 
     private boolean isAvailable; // Indicates if the product is currently available
 
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        lastChecked = LocalDateTime.now();
     }
 }

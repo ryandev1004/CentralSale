@@ -4,8 +4,7 @@ import com.ryan.centralsale.model.Product;
 import com.ryan.centralsale.model.User;
 import com.ryan.centralsale.model.UserProduct;
 import com.ryan.centralsale.model.dto.UserProductDTO;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring",
         uses = {
@@ -23,5 +22,7 @@ public interface UserProductMapper {
     @Mapping(target = "notifyMe", constant = "true")  // Default value
     @Mapping(target = "active", constant = "true")     // Default value
     UserProduct toEntity(User user, Product product);
+
+
 
 }

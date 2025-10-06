@@ -20,7 +20,7 @@ public class UserProduct {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "asin", nullable = false)
     private Product product;
 
     @Column(name = "price_check", nullable = false)

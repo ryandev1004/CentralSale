@@ -13,6 +13,6 @@ public class ProductCreateDTO {
     private String title;
     private String imageUrl;
     private double currentPrice;
-    private boolean status; // true if available, false if unavailable
+    private boolean isAvailable; // true if available, false if unavailable
 
 }
