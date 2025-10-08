@@ -18,7 +18,7 @@ public class User {
     @UuidGenerator
     private UUID userId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @Email(message = "Email should be valid")
     private String email;
 

@@ -26,7 +26,7 @@ public class Email {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(email);
             message.setTo(user.getEmail());
-            message.setSubject("!!! PRICE DROP ALERT !!!");
+            message.setSubject("!!! PRICE DROP ALERT: " + userProduct.getProduct().getTitle() + " !!!");
             message.setText("One of your items has dropped in price by " + percentageDrop + "%!\n\n"
                     + "Product: " + userProduct.getProduct().getTitle() + "\n"
                     + "New Price: $" + userProduct.getProduct().getCurrentPrice() + "\n"
