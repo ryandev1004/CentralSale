@@ -31,6 +31,6 @@ export interface SignupRequest {
 }
 
 export interface SignupResponse {
-  id: string;
+  userId: string;
   email: string;
 }

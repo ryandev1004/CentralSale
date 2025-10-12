@@ -7,6 +7,6 @@ public class ProductPatchDTO {
     private String title;
     private String imageUrl;
     private String productUrl;
-    private Double currentPrice;
-    private Boolean isAvailable;
+    private Double newPrice;
+    private Double percentChange;
 }

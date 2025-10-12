@@ -18,7 +18,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -156,6 +155,7 @@ public class ProductService {
         double newPrice = productToUpdate.getCurrentPrice();
         productToUpdate.setPriceDrop(oldPrice > newPrice);
         productToUpdate.setLastChecked(LocalDateTime.now());
+        productToUpdate.setPercentChange(oldPrice / newPrice);
         System.out.println("After setting - lastChecked: " + productToUpdate.getLastChecked());
 
         if(productToUpdate.isPriceDrop()) {
@@ -171,9 +171,7 @@ public class ProductService {
         List<UserProduct> userProducts = userProductService
                 .getActiveUserProductsByProduct(product);
         for (UserProduct userProduct : userProducts) {
-            if (userProduct.isNotifyMe()) {
-                email.sendEmail(userProduct, percent);
-            }
+            email.sendEmail(userProduct, percent);
         }
     }
 }

@@ -9,5 +9,4 @@ public class UserProductDTO {
     private UUID trackerId;
     private double priceCheck;
     private ProductDTO product;
-    private boolean isActive;
 }

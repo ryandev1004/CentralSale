@@ -3,6 +3,7 @@ package com.ryan.centralsale.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.validator.constraints.URL;
 
 import java.time.LocalDateTime;
 
@@ -23,7 +24,9 @@ public class Product {
     @Column(unique = true, nullable = false)
     private String asin; // Amazon Standard Identification Number
 
+    @URL(message = "Product URL should be valid")
     private String productUrl;
+
     private String title;
     private String imageUrl;
 
@@ -38,7 +41,9 @@ public class Product {
 
     private boolean priceDrop; // Indicates if there has been a price drop since the last check
 
-    private boolean isAvailable; // Indicates if the product is currently available
+    @Column(name = "percent_change", nullable = false)
+    private double percentChange = 0.0; // Default to 0.0, updated when price changes
+
 
     @PrePersist
     protected void onCreate() {

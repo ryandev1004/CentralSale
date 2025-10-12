@@ -19,8 +19,6 @@ public interface UserProductMapper {
     @Mapping(target = "user", source = "user")
     @Mapping(target = "product", source = "product")
     @Mapping(target = "priceCheck", source = "product.currentPrice")
-    @Mapping(target = "notifyMe", constant = "true")  // Default value
-    @Mapping(target = "active", constant = "true")     // Default value
     UserProduct toEntity(User user, Product product);
 
 

@@ -20,14 +20,13 @@ public class UserProduct {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "asin", nullable = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @Column(name = "price_check", nullable = false)
     private double priceCheck; // The price the user wants to track
 
-    @Column(name ="notify_me", nullable = false)
-    private boolean notifyMe; // Whether the user wants to be notified when the price drops below
+    private boolean isActive; // Indicates if the tracking is active
 
-    private boolean isActive; // Whether this tracking is active or not
+
 }
