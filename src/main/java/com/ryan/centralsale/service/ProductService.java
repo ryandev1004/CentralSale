@@ -129,6 +129,11 @@ public class ProductService {
         return productRepository.findAllUncheckedProducts(LocalDateTime.now().minusHours(3));
     }
 
+    // Testing purposes
+    public List<Product> findAllProducts() {
+        return productRepository.findAll();
+    }
+
     public List<Product> findUnusedProducts() {
         return productRepository.findUnusedProducts();
     }
@@ -155,10 +160,11 @@ public class ProductService {
         double newPrice = productToUpdate.getCurrentPrice();
         productToUpdate.setPriceDrop(oldPrice > newPrice);
         productToUpdate.setLastChecked(LocalDateTime.now());
-        productToUpdate.setPercentChange(oldPrice / newPrice);
+        productToUpdate.setPercentChange(((newPrice - oldPrice) / oldPrice) * 100);
         System.out.println("After setting - lastChecked: " + productToUpdate.getLastChecked());
 
         if(productToUpdate.isPriceDrop()) {
+            System.out.println("Price drop detected for ASIN: " + asin + " from " + oldPrice + " to " + newPrice);
             double percentOff = ((oldPrice - newPrice) / oldPrice) * 100;
             notifyUsers(productToUpdate, percentOff);
         }

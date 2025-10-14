@@ -19,5 +19,8 @@ public interface ProductMapper {
     @Mapping(target = "productId", ignore = true)
     @Mapping(target = "asin", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "lastChecked", ignore = true)
+    @Mapping(target = "percentChange", ignore = true)
+    @Mapping(target = "priceDrop", ignore = true)
     void updateEntityFromDto(ProductPatchDTO dto, @MappingTarget Product product);
 }

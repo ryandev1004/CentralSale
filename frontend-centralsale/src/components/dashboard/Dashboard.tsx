@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import TrackedItem from "./TrackedItem";
 import { useItems } from "../../contexts/ItemContext";
-
+import { Loader2 } from 'lucide-react';
 
 function Dashboard() {
     const [url, setUrl] = useState('');
     const { items, loading, fetchItems, addItem } = useItems();
+    const [isAdding, setIsAdding] = useState(false);
 
     useEffect(() => {
         fetchItems();
@@ -14,12 +15,15 @@ function Dashboard() {
     const handleAdd = async() => {
         if (!url.trim()) return;
         
+        setIsAdding(true);
         try {
             await addItem(url);
             setUrl('');
         } catch (error) {
             console.error('Failed to add item:', error);
             alert('Failed to add item. Please try again.');
+        } finally {
+            setIsAdding(false);
         }
     };
 
@@ -37,38 +41,43 @@ function Dashboard() {
                         placeholder="Enter your Amazon item's URL..."
                         value={url}
                         onChange={(e) => setUrl(e.target.value)}
+                        disabled={isAdding}
                     />
                     <button 
-                    className="bg-yellow-400 hover:bg-yellow-500/90 rounded-xl shadow-md p-2 px-4 font-semibold cursor-pointer whitespace-nowrap"
-                    onClick={handleAdd}
+                        className="bg-yellow-400 hover:bg-yellow-500/90 rounded-xl shadow-md p-2 px-4 font-semibold cursor-pointer whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                        onClick={handleAdd}
+                        disabled={isAdding || !url.trim()}
                     >
-                        Add Item
+                        {isAdding ? (
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : 'Add Item'}
                     </button> 
                 </div>
                 <div className="flex flex-col gap-6">
                     {loading ? (
-                    <div className="text-center py-8 text-gray-600">
-                        Loading items...
-                    </div>
-                ) : items.length === 0 ? (
-                    <div className="text-center py-8 text-gray-500">
-                        No items tracked yet. Add one to get started!
-                    </div>
-                ) : (
-                    <div className="flex flex-col gap-4">
-                        {items.map((item) => (
-                            item.product && (
-                                <TrackedItem
-                                    key={item.trackerId}
-                                    productUrl={item.product.productUrl}
-                                    title={item.product.title}
-                                    percentChange={item.product.percentChange}
-                                    imageUrl={item.product.imageUrl}
-                                    currentPrice={item.product.currentPrice}
-                                />
-                            )
-                        ))}
-                    </div>
+                        <div className="text-center py-8 text-gray-600">
+                            Loading items...
+                        </div>
+                    ) : items.length === 0 ? (
+                        <div className="text-center py-8 text-gray-500">
+                            No items tracked yet. Add one to get started!
+                        </div>
+                    ) : (
+                        <div className="flex flex-col gap-4">
+                            {items.map((item) => (
+                                item.product && (
+                                    <TrackedItem
+                                        key={item.trackerId}
+                                        trackerId={item.trackerId}
+                                        productUrl={item.product.productUrl}
+                                        title={item.product.title}
+                                        percentChange={item.product.percentChange}
+                                        imageUrl={item.product.imageUrl}
+                                        currentPrice={item.product.currentPrice}
+                                    />
+                                )
+                            ))}
+                        </div>
                     )}
                 </div>
             </div>

@@ -20,6 +20,7 @@ public class Email {
     private String email;
 
     public void sendEmail(UserProduct userProduct, double percentageDrop) {
+        System.out.println("Sending email to " + userProduct.getUser().getEmail() + " about product " + userProduct.getProduct().getTitle());
         try {
             User user = userProduct.getUser();
 

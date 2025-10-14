@@ -28,4 +28,10 @@ public class UserProductController {
     public ResponseEntity<List<UserProductDTO>> getAllUserProducts(@PathVariable UUID userId){
         return ResponseEntity.ok().body(userProductService.getAllUserProducts(userId));
     }
+
+    @DeleteMapping("/{trackerId}")
+    public ResponseEntity<Void> deleteUserProduct(@PathVariable UUID trackerId){
+        userProductService.removeUserProduct(trackerId);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -18,9 +18,16 @@ public class Scheduler {
         return productService.findAllUncheckedProducts();
     }
 
+    // Testing Purposes
+    private List<Product> getAllProducts() {
+        return productService.findAllProducts();
+    }
+
     @Scheduled(cron = "0 */30 * * * *")
+    //@Scheduled(cron = "*/50 * * * * *")
     public void updateProductPrices() {
-        List<Product> productsToUpdate = getProductsToUpdate();
+        //List<Product> productsToUpdate = getProductsToUpdate();
+        List<Product> productsToUpdate = getAllProducts();
         for (Product product : productsToUpdate) {
             productService.updateProduct(product.getAsin());
             try {

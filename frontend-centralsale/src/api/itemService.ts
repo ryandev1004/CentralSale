@@ -14,6 +14,10 @@ export const itemService = {
   fetchItems: async (userId: string): Promise<UserProductDTO[]> => {
     const response = await axiosInstance.get<UserProductDTO[]>(`/users/products/${userId}`);
     return response.data;
-  }
+  },
+
+  removeItem: async (trackerId: string): Promise<void> => {
+    await axiosInstance.delete(`/users/products/${trackerId}`);
+  } 
 
 }

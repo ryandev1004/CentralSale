@@ -17,10 +17,19 @@ export interface UserProductDTO {
     product: Product | null;
 }
 
+export interface TrackedItemType {
+    trackerId: string;
+    productUrl: string;
+    imageUrl: string;
+    title: string;
+    percentChange: number;
+    currentPrice: number;
+}
+
 export interface ItemContextType {
   items: UserProductDTO[];
   loading: boolean;
   fetchItems: () => Promise<void>;
   addItem: (url: string) => Promise<void>;
-  //deleteItem: (trackerId: string) => Promise<void>;
+  removeItem: (trackerId: string) => Promise<void>;
 }

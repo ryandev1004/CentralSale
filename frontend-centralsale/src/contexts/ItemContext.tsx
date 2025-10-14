@@ -39,8 +39,20 @@ export const ItemProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    const removeItem = async (trackerId: string) => {
+      if(!trackerId) return;
+
+      try {
+        await itemService.removeItem(trackerId);
+        setItems(prevItems => prevItems.filter(item => item.trackerId !== trackerId));
+      } catch (e) {
+        console.log('ERROR: ', e);
+        throw e;
+      }
+    }; 
+
     return (
-    <ItemContext.Provider value={{ items, loading, fetchItems, addItem }}>
+    <ItemContext.Provider value={{ items, loading, fetchItems, addItem, removeItem }}>
       {children}
     </ItemContext.Provider>
   );

@@ -56,7 +56,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
-    authService.logout();
     setUser(null);
     setIsAuthenticated(false);
     sessionStorage.removeItem('user');

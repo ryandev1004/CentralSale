@@ -15,6 +15,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     @Query("SELECT p FROM Product p WHERE p.lastChecked IS NULL OR p.lastChecked < :cutoffTime")
     List<Product> findAllUncheckedProducts(LocalDateTime cutoffTime);
 
-    @Query("SELECT p FROM Product p LEFT JOIN UserProduct up ON p.asin = up.product.asin WHERE up.trackerId IS NULL")
+    @Query("SELECT p FROM Product p LEFT JOIN UserProduct up ON p.productId = up.product.productId WHERE up.trackerId IS NULL")
     List<Product> findUnusedProducts();
 }

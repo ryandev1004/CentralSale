@@ -41,6 +41,7 @@ public class UserProductService {
             throw new RuntimeException("Failed to fetch product with ASIN: " + asin);
         }
         UserProduct userProduct = userProductMapper.toEntity(user, product);
+        userProduct.setActive(true);
         return userProductMapper.toDTO(userProductRepository.save(userProduct));
     }
 
@@ -51,6 +52,12 @@ public class UserProductService {
         }
         List<UserProduct> userProducts = userProductRepository.findByUser(user);
         return userProducts.stream().map(userProductMapper::toDTO).toList();
+    }
+
+    public void removeUserProduct(UUID trackerId) {
+        UserProduct userProduct = userProductRepository.findById(trackerId)
+                .orElseThrow(() -> new EntityNotFoundException("UserProduct not found with ID: " + trackerId));
+        userProductRepository.delete(userProduct);
     }
 
     public List<UserProduct> getActiveUserProductsByProduct(Product product) {

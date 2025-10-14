@@ -24,7 +24,7 @@ public class UserProduct {
     private Product product;
 
     @Column(name = "price_check", nullable = false)
-    private double priceCheck; // The price the user wants to track
+    private double priceCheck;
 
     private boolean isActive; // Indicates if the tracking is active
 
