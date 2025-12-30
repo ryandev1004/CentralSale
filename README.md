@@ -36,7 +36,7 @@ Once you've completed that, you'll need to run both the server via '**CentralSal
 ```bash
 CentralSale/src/main/java/CentralSaleApplication
 ```
-Then, run the frontend by doing:
+Then, run the frontend after cd'ing into the frontend-centralsale directory then doing:
 
 ```bash
   npm run dev
